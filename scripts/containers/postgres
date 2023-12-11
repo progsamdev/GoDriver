@@ -1,0 +1,7 @@
+docker run --name imersao-postgres -e POSTGRES_PASSWORD=1234 -p 5432:5432 -d postgres
+
+docker run -it -v C:\Users\Sam\Desktop\GoLang\ImersaoGoLang\Worker\scripts\database:/tmp --network IMERSAO_NET postgres bash
+
+psql -h imersao-postgres -U postgres imersaogodriver < tmp/users.sql
+psql -h imersao-postgres -U postgres imersaogodriver < tmp/folders.sql
+psql -h imersao-postgres -U postgres imersaogodriver < tmp/files.sql
