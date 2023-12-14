@@ -31,12 +31,12 @@ type User struct {
 func (u *User) SetPassword(password string) error {
 
 	if password == "" {
-		return errors.New("Passwords is required and can't be blank")
+		return errors.New("passwords is required and can't be blank")
 	}
 
 	if len(password) < 6 {
-		return errors.New("Password must have at least 6 characters")
+		return errors.New("password must have at least 6 characters")
 	}
 	u.Password = fmt.Sprintf("%x", (md5.Sum([]byte(password))))
-
+	return nil
 }
