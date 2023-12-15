@@ -4,6 +4,7 @@ go 1.21.3
 
 require (
 	github.com/aws/aws-sdk-go v1.49.0
+	github.com/go-chi/chi v1.5.5
 	github.com/lib/pq v1.10.9
 	github.com/rabbitmq/amqp091-go v1.9.0
 )
