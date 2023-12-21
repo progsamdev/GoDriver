@@ -39,7 +39,7 @@ func (h *handler) Get(rw http.ResponseWriter, r *http.Request) {
 
 func GetFolder(db *sql.DB, folderID int64) (*Folder, error) {
 
-	stml := `select *from "folders" where id=$1`
+	stml := `select *from "folders" where "id"=$1`
 	row := db.QueryRow(stml, folderID)
 
 	var f Folder
@@ -54,7 +54,7 @@ func GetFolder(db *sql.DB, folderID int64) (*Folder, error) {
 
 func getSubFolders(db *sql.DB, folderID int64) ([]Folder, error) {
 
-	stml := `select *from "folders" where parent_id=$1`
+	stml := `select *from "folders" where "parent_id"=$1`
 	rows, err := db.Query(stml, folderID)
 	if err != nil {
 		return nil, err

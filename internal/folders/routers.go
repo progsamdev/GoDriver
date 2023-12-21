@@ -16,4 +16,5 @@ func SetRouters(r chi.Router, db *sql.DB) {
 	r.Put("/{id}", h.Modify)
 	r.Delete("{id}", h.Delete)
 	r.Get("/{id}", h.Get)
+	r.Get("/", h.List)
 }
