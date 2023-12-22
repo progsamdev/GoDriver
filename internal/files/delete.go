@@ -30,7 +30,7 @@ func (h *handler) Delete(rw http.ResponseWriter, r *http.Request) {
 
 func Delete(db *sql.DB, id int64) error {
 
-	stmt := `update "files" set "deleted"= true, "modified_at"=$2 WHERE id = $3`
+	stmt := `update "files" set "deleted"= true, "modified_at"=$2 WHERE "id" = $3`
 	_, err := db.Exec(stmt, time.Now(), id)
 	return err
 

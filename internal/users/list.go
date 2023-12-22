@@ -20,7 +20,7 @@ func (h *handler) List(rw http.ResponseWriter, r *http.Request) {
 
 func SelectAll(db *sql.DB) ([]User, error) {
 
-	stmt := `select * from "users" where deleted = false`
+	stmt := `select * from "users" where "deleted" = false`
 	rows, err := db.Query(stmt)
 	if err != nil {
 		return nil, err

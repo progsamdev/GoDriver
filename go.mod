@@ -3,6 +3,7 @@ module GoDriver
 go 1.21.3
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.1
 	github.com/aws/aws-sdk-go v1.49.0
 	github.com/go-chi/chi v1.5.5
 	github.com/lib/pq v1.10.9
