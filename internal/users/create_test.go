@@ -1,6 +1,7 @@
 package users
 
 import (
+	"regexp"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -20,7 +21,7 @@ func TestInsert(t *testing.T) {
 		t.Error(err)
 	}
 
-	mock.ExpectExec(`insert into "users" ("name", "username", "password", "modified_at")*`).
+	mock.ExpectExec(regexp.QuoteMeta(`insert into "users" ("name", "username", "password", "modified_at") VALUES($1, $2, $3, $4)`)).
 		WithArgs("Tiago", "samuel@silva.com.br", u.Password, u.ModifiedAt).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
