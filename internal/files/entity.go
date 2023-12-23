@@ -31,14 +31,14 @@ func New(ownerId int64, name, fileType, path string) (*File, error) {
 
 type File struct {
 	ID         int64     `json:"id"`
-	FolderID   int64     `json:"-"`
+	FolderID   int64     `json:"folder_id"`
 	OwnerID    int64     `json:"owner_id"`
 	Name       string    `json:"name"`
 	Type       string    `json:"type"`
-	Path       string    `json:"-"`
+	Path       string    `json:"path"`
 	CreatedAt  time.Time `json:"created_at"`
 	ModifiedAt time.Time `json:"modified_at"`
-	Deleted    bool      `json:"-"`
+	Deleted    bool      `json:"deleted"`
 }
 
 func (f *File) Validate() error {
