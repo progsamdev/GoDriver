@@ -52,7 +52,7 @@ func deleteFolderContent(db *sql.DB, folderID int64) error {
 
 func deleteSubfolders(db *sql.DB, folderID int64) error {
 
-	subFolders, err := getSubFolders(db, folderID)
+	subFolders, err := GetSubFolders(db, folderID)
 	if err != nil {
 		return err
 	}

@@ -33,7 +33,7 @@ func (h *handler) Create(rw http.ResponseWriter, r *http.Request) {
 
 func Insert(db *sql.DB, f *Folder) (int64, error) {
 
-	stmt := `insert into "folders" {"parent_id", "name", "modified"} values ($1, $2, $3)`
+	stmt := `insert into "folders" {"parent_id", "name", "modified_at"} VALUES ($1, $2, $3)`
 	result, err := db.Exec(stmt, f.ParentID, f.Name, f.ModifiedAt)
 	if err != nil {
 		return -1, err

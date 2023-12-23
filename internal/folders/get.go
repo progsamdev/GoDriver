@@ -52,9 +52,9 @@ func GetFolder(db *sql.DB, folderID int64) (*Folder, error) {
 	return &f, nil
 }
 
-func getSubFolders(db *sql.DB, folderID int64) ([]Folder, error) {
+func GetSubFolders(db *sql.DB, folderID int64) ([]Folder, error) {
 
-	stml := `select *from "folders" where "parent_id"=$1`
+	stml := `select *from "folders" where "parent_id"=$1 and "deleted" = false`
 	rows, err := db.Query(stml, folderID)
 	if err != nil {
 		return nil, err
@@ -75,7 +75,7 @@ func getSubFolders(db *sql.DB, folderID int64) ([]Folder, error) {
 }
 
 func GetFolderContent(db *sql.DB, folderID int64) ([]FolderResource, error) {
-	fs, err := getSubFolders(db, folderID)
+	fs, err := GetSubFolders(db, folderID)
 	if err != nil {
 		return nil, err
 	}
