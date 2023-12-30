@@ -1,6 +1,7 @@
 package files
 
 import (
+	utl "GoDriver/internal"
 	"regexp"
 	"testing"
 
@@ -22,7 +23,7 @@ func TestUpdate(t *testing.T) {
 	}
 
 	mock.ExpectExec(regexp.QuoteMeta(`update "files" set "name"=$1, "modified_at"=$2, "deleted"=$3 WHERE "id"=$4`)).
-		WithArgs(f.Name, f.ModifiedAt, f.Deleted, f.ID).
+		WithArgs(f.Name, utl.AnyTime{}, f.Deleted, f.ID).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	err = Update(db, f.ID, f)

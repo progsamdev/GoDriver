@@ -1,6 +1,10 @@
 package files
 
-import "database/sql"
+import (
+	"database/sql"
+	"errors"
+	"fmt"
+)
 
 func List(db *sql.DB, folderID int64) ([]File, error) {
 	stmt := `select * from "files" where "folder_id" = $1 and "deleted" = false`
@@ -28,5 +32,20 @@ func selectAllFiles(db *sql.DB, stmt string) ([]File, error) {
 		}
 		files = append(files, f)
 	}
+
+	isValid, err := isValidWord("test")
+
+	if err != nil {
+		fmt.Printf("Eh uma palavra valida %v", isValid)
+	}
+
 	return files, nil
+}
+
+func isValidWord(word string) (bool, error) {
+
+	if len(word) == 0 {
+		return false, errors.New("opa, palavra vazia não vale")
+	}
+	return true, nil
 }

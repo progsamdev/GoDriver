@@ -11,6 +11,7 @@ type BucketType int
 
 const (
 	AwsProvider BucketType = iota
+	MockProvider
 )
 
 type BucketInterface interface {
@@ -24,6 +25,7 @@ type Bucket struct {
 }
 
 func New(bt BucketType, cfg any) (b *Bucket, err error) {
+	b = new(Bucket)
 	rt := reflect.TypeOf(cfg)
 	switch bt {
 	case AwsProvider:
@@ -34,6 +36,8 @@ func New(bt BucketType, cfg any) (b *Bucket, err error) {
 		if err != nil {
 			return nil, fmt.Errorf("error creating Aws Session")
 		}
+	case MockProvider:
+		b.p = &MockBucket{content: make(map[string][]byte)}
 	default:
 		return nil, fmt.Errorf("config type not implemented")
 	}

@@ -1,79 +1,44 @@
 package users
 
 import (
+	utl "GoDriver/internal"
 	"bytes"
-	"crypto/md5"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"regexp"
-	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestCreate(t *testing.T) {
-
-	db, mock, err := sqlmock.New()
-	if err != nil {
-		t.Error(err)
-	}
-
-	defer db.Close()
-
-	h := handler{db}
-
-	u := User{
-		Name:     "Samuel",
-		Username: "samuel@silva.com.br",
-		Password: "1234567",
-	}
+func (ts *TransactionSuite) TestCreate() {
 
 	var b bytes.Buffer
-	err = json.NewEncoder(&b).Encode(&u)
-	if err != nil {
-		t.Error(err)
-	}
+	err := json.NewEncoder(&b).Encode(ts.entity)
+	assert.NoError(ts.T(), err)
+
+	ts.entity.SetPassword(ts.entity.Password)
+
 	rr := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodPost, "/", &b)
+	setMock(ts.mock, ts.entity)
 
-	mock.ExpectExec(regexp.QuoteMeta(`insert into "users" ("name", "username", "password", "modified_at") VALUES($1, $2, $3, $4)`)).
-		WithArgs(u.Name, u.Username, fmt.Sprintf("%x", (md5.Sum([]byte(u.Password)))), u.ModifiedAt).
-		WillReturnResult(sqlmock.NewResult(1, 1))
+	ts.handler.Create(rr, req)
+	assert.Equal(ts.T(), http.StatusCreated, rr.Code)
 
-	h.Create(rr, req)
-	if rr.Code != http.StatusCreated {
-		t.Errorf("Error: %v", rr)
-	}
 }
 
-func TestInsert(t *testing.T) {
+func (ts *TransactionSuite) TestInsert() {
 
-	db, mock, err := sqlmock.New()
-	if err != nil {
-		t.Error(err)
-	}
+	setMock(ts.mock, ts.entity)
 
-	defer db.Close()
+	_, err := Insert(ts.conn, ts.entity)
+	assert.NoError(ts.T(), err)
+}
 
-	u, err := New("Tiago", "samuel@silva.com.br", "123456")
-	if err != nil {
-		t.Error(err)
-	}
-
+func setMock(mock sqlmock.Sqlmock, entity *User) {
 	mock.ExpectExec(regexp.QuoteMeta(`insert into "users" ("name", "username", "password", "modified_at") VALUES($1, $2, $3, $4)`)).
-		WithArgs("Tiago", "samuel@silva.com.br", u.Password, u.ModifiedAt).
+		WithArgs(entity.Name, entity.Username, entity.Password, utl.AnyTime{}).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-
-	_, err = Insert(db, u)
-	if err != nil {
-		t.Error(err)
-	}
-
-	err = mock.ExpectationsWereMet()
-	if err != nil {
-		t.Error(err)
-	}
-
 }
