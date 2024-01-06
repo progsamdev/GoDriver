@@ -6,15 +6,17 @@ import (
 	"github.com/go-chi/chi"
 )
 
+var gh handler
+
 type handler struct {
 	db *sql.DB
 }
 
 func SetRouters(r chi.Router, db *sql.DB) {
-	h := handler{db}
-	r.Post("/", h.Create)
-	r.Put("/{id}", h.Modify)
-	r.Delete("/{id}", h.Delete)
-	r.Get("/{id}", h.GetByID)
-	r.Get("/", h.List)
+	gh = handler{db}
+	r.Post("/", gh.Create)
+	r.Put("/{id}", gh.Modify)
+	r.Delete("/{id}", gh.Delete)
+	r.Get("/{id}", gh.GetByID)
+	r.Get("/", gh.List)
 }

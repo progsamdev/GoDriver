@@ -37,3 +37,15 @@ func Get(db *sql.DB, id int) (*User, error) {
 	}
 	return &u, nil
 }
+
+func GetByUsernameAndEncPassword(db *sql.DB, username, encPassword string) (*User, error) {
+	stmt := `select * from "users" WHERE "username" = $1 and password=$2`
+	row := db.QueryRow(stmt, username, encPassword)
+	var u User
+	err := row.Scan(&u.ID, &u.Name, &u.Username, &u.Password, &u.CreatedAt, &u.ModifiedAt, &u.Deleted, &u.LastLogin)
+	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
+}
