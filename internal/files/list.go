@@ -1,0 +1,51 @@
+package files
+
+import (
+	"database/sql"
+	"errors"
+	"fmt"
+)
+
+func List(db *sql.DB, folderID int64) ([]File, error) {
+	stmt := `select * from "files" where "folder_id" = $1 and "deleted" = false`
+	return selectAllFiles(db, stmt)
+}
+
+func ListRoot(db *sql.DB) ([]File, error) {
+	stmt := `select * from "files" where "folder_id" = is null and "deleted" = false`
+	return selectAllFiles(db, stmt)
+
+}
+
+func selectAllFiles(db *sql.DB, stmt string) ([]File, error) {
+	rows, err := db.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+
+	files := make([]File, 0)
+	for rows.Next() {
+		var f File
+		err := rows.Scan(&f.ID, &f.FolderID, &f.OwnerID, &f.Name, &f.Type, &f.Path, &f.CreatedAt, &f.ModifiedAt, &f.Deleted)
+		if err != nil {
+			continue
+		}
+		files = append(files, f)
+	}
+
+	isValid, err := isValidWord("test")
+
+	if err != nil {
+		fmt.Printf("Eh uma palavra valida %v", isValid)
+	}
+
+	return files, nil
+}
+
+func isValidWord(word string) (bool, error) {
+
+	if len(word) == 0 {
+		return false, errors.New("opa, palavra vazia não vale")
+	}
+	return true, nil
+}
